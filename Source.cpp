@@ -40,14 +40,12 @@ private:
 };
 
 int main(){
-	drob *d1 = new drob;
-	drob *d2 = new drob;
-	drob *d3 = new drob;
-	d1->Read();
-	d2->Read();
-	*d3 = drob::Add(*d1, *d2);
-	d3->Display();
-	cout << d3->drob_ch() << endl;
-	delete d1, d2, d3;
+	drob *d = new drob[3];
+	d[0].Read();
+	d[1].Read();
+	d[2] = drob::Add(d[0], d[1]);
+	d[2].Display();
+	cout << d[2].drob_ch() << endl;
+	delete[] d;
 	return 0;
 }
