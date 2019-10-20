@@ -2,50 +2,80 @@
 
 using namespace std;
 
-class drob{
+class Element{
 public:
-
-	void Init(int ch, int zn){
-		this->chisl = ch;
-		this->znam = zn;
-	}
-
-	void Read(){
-		cin >> this->chisl;
-		cin >> this->znam;
+	void Init(int w, double p){
+		this->weight = w;
+		this->price = p;
 	}
 
 	void Display(){
-		cout << "Chislitel: " << this->chisl << endl;
-		cout << "Znamenatel: " << this->znam << endl;
+		cout << "Weight: " << this->weight << "g" << endl;
+		cout << "Price for gram: " << this->price << endl;
 	}
 
-	static drob Add(drob d1, drob d2){
-		drob d;
-		d.chisl = d1.chisl * d2.znam + d2.chisl * d1.znam;
-		d.znam = d1.znam * d2.znam;
-		return d;
+	double Price(){
+		return this->weight*this->price;
 	}
-
-	float drob_ch(){
-		float a;
-		int b = this->chisl % this->znam;
-		a = b / float(this->znam);
-		return a;
-	}
-
 private:
-	int chisl;
-	int znam;
+	int weight;
+	double price;
+};
+
+class Izdelie{
+public:
+	void Init(Element el[3], int am[3]){
+		for (int i = 0; i < 3; i++){
+			this->elems[i] = el[i];
+			this->amount[i] = am[i];
+		}
+		this->price = 0;
+		for (int i = 0; i < 3; i++)
+			this->price += this->elems[i].Price() * this->amount[i];
+	}
+
+	void Display(){
+		for (int i = 0; i < 3; i++){
+			cout << "Amount of elem #" << i + 1 << ": " << this->amount[i] << endl;
+		}
+		cout << "Price: " << this->price << endl;
+	}
+
+	double Price(){
+		return this->price;
+	}
+
+	Element Max(){
+		Element max = elems[0];
+		for (int i = 1; i < 3; i++)
+			if (this->elems[i].Price() > max.Price())
+				max = elems[i];
+		return max;
+	}
+
+	~Izdelie(){
+		delete[] elems;
+	}
+private:
+	Element *elems = new Element[3];
+	int amount[3];
+	double price;
 };
 
 int main(){
-	drob *d = new drob[3];
-	d[0].Read();
-	d[1].Read();
-	d[2] = drob::Add(d[0], d[1]);
-	d[2].Display();
-	cout << d[2].drob_ch() << endl;
-	delete[] d;
+	Element el[3];
+	Element elMax;
+	Izdelie izd;
+	int am[3];
+	for (int i = 1; i < 4; i++){
+		el[i - 1].Init(i * 50, i * 30);
+		am[i - 1] = i;
+		el[i - 1].Display();
+	}
+	izd.Init(el, am);
+	izd.Display();
+	elMax = izd.Max();
+	cout << "Max Element: " << endl;
+	elMax.Display();
 	return 0;
 }
